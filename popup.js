@@ -62,37 +62,26 @@ function renderProblems() {
         
         const problemsList = section.querySelector('.problems-list');
         
-        // Show only the most recent unsolved problem (or most recent if all solved)
-        const unsolvedProblems = platformProblems.filter(p => p.status === 'unsolved');
-        const displayProblem = unsolvedProblems.length > 0 
-          ? unsolvedProblems[0] 
-          : platformProblems[0];
-        
-        const item = document.createElement('div');
-        item.className = 'problem-item';
-        item.innerHTML = `
-          <div class="problem-info">
-            <div class="problem-name">${displayProblem.name}</div>
-            <div class="problem-time">${formatTime(displayProblem.timestamp)}</div>
-          </div>
-          <div class="problem-status status-${displayProblem.status}">
-            ${displayProblem.status === 'solved' ? '✓ Solved' : '⏳ Unsolved'}
-          </div>
-        `;
-        
-        item.addEventListener('click', () => {
-          chrome.tabs.create({ url: displayProblem.url });
+        // Render all problems for the platform
+        platformProblems.forEach(problem => {
+          const item = document.createElement('div');
+          item.className = 'problem-item';
+          item.innerHTML = `
+            <div class="problem-info">
+              <div class="problem-name">${problem.name}</div>
+              <div class="problem-time">${formatTime(problem.timestamp)}</div>
+            </div>
+            <div class="problem-status status-${problem.status}">
+              ${problem.status === 'solved' ? '✓ Solved' : '⏳ Unsolved'}
+            </div>
+          `;
+          
+          item.addEventListener('click', () => {
+            chrome.tabs.create({ url: problem.url });
+          });
+          
+          problemsList.appendChild(item);
         });
-        
-        problemsList.appendChild(item);
-        
-        // Show count if there are more problems
-        if (platformProblems.length > 1) {
-          const countInfo = document.createElement('div');
-          countInfo.style.cssText = 'font-size: 11px; opacity: 0.7; margin-top: 8px; text-align: center;';
-          countInfo.textContent = `+${platformProblems.length - 1} more problem${platformProblems.length - 1 > 1 ? 's' : ''} tracked`;
-          section.querySelector('.problems-list').appendChild(countInfo);
-        }
         
         container.appendChild(section);
       }
