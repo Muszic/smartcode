@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Coding Problem Tracker",
+  "version": "1.0",
+  "description": "Track your last visited unsolved problems on LeetCode, Codeforces, and CodeChef",
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/*",
+    "https://codeforces.com/*",
+    "https://www.codechef.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://leetcode.com/problems/*",
+        "https://codeforces.com/problemset/problem/*",
+        "https://codeforces.com/contest/*/problem/*",
+        "https://www.codechef.com/problems/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
